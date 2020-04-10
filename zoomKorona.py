@@ -17,7 +17,7 @@ while(1):
     if(flag):
         break
 
-    time.sleep(10)
+    time.sleep(60)
 
     # Returns a datetime object containing the local date and time
     dateTimeObj = datetime.now()
@@ -64,7 +64,7 @@ while(1):
         #print("rec_time ", rec_timeVal)
 
 
-        if(cur_timeVal==rec_timeVal):
+        if(cur_timeVal>rec_timeVal-5 and cur_timeVal<rec_timeVal+5):
             zoom_url = sheet.cell(i,3).value
             webbrowser.open_new_tab(zoom_url)
             flag = 1
