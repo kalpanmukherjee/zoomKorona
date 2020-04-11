@@ -8,9 +8,9 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 import webbrowser
 
-
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+
 
 def get_event(creds, service):
 
@@ -36,6 +36,7 @@ def get_event(creds, service):
 
     #FOR FULL DAY EVENTS
     if(start[17:]==""):
+        print("Next event is a full day event")
         return 0
     
     record_time = datetime.datetime.strptime(time, '%Y-%m-%dT%H:%M')
@@ -59,8 +60,8 @@ def get_event(creds, service):
 
     if(now_timeVal>rec_timeVal-5 and now_timeVal<rec_timeVal+5):
         print("Event time matches current time! LAUNCHING...")
-        zoom_url = events[0]['description']
-        webbrowser.open_new_tab(zoom_url)
+        #zoom_url = events[0]['description']
+        #webbrowser.open_new_tab(zoom_url)
         return 1
         #flag = 1
         #break   
@@ -74,36 +75,42 @@ def get_event(creds, service):
 
 
 def main():
-    
-    #AUTHENTICATION START--------------------------------------------------------------------------------
-    
-    creds = None
-    # The file token.pickle stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
-            creds = pickle.load(token)
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        with open('token.pickle', 'wb') as token:
-            pickle.dump(creds, token)
-            
-    #AUTHENTICATION END------------------------------------------------------------------------------
 
-    service = build('calendar', 'v3', credentials=creds)
+    try:
+    
+        #AUTHENTICATION START--------------------------------------------------------------------------------
+        
+        creds = None
+        # The file token.pickle stores the user's access and refresh tokens, and is
+        # created automatically when the authorization flow completes for the first
+        # time.
+        if os.path.exists('token.pickle'):
+            with open('token.pickle', 'rb') as token:
+                creds = pickle.load(token)
+        # If there are no (valid) credentials available, let the user log in.
+        if not creds or not creds.valid:
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+            else:
+                flow = InstalledAppFlow.from_client_secrets_file(
+                    'credentials.json', SCOPES)
+                creds = flow.run_local_server(port=0)
+            # Save the credentials for the next run
+            with open('token.pickle', 'wb') as token:
+                pickle.dump(creds, token)
+                
+        #AUTHENTICATION END------------------------------------------------------------------------------
 
-    while(get_event(creds, service)!=1):
-        #HOW LONG TO SLEEP FOR IN SECONDS
+        service = build('calendar', 'v3', credentials=creds)
+
+        while(get_event(creds, service)!=1):
+            #HOW LONG TO SLEEP FOR IN SECONDS
+            time.sleep(10)
+
+    except:
+        print("Please check your internet connection")
         time.sleep(10)
-    
+        main()    
 
 if __name__ == '__main__':
     main()
