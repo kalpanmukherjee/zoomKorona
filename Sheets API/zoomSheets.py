@@ -17,7 +17,9 @@ while(1):
     if(flag):
         break
 
-    time.sleep(60)
+    #wait time b/n every check in seconds
+    #keep it atleast at 5*60=300 i.e. every 5 mins
+    time.sleep(180)
 
     # Returns a datetime object containing the local date and time
     dateTimeObj = datetime.now()
@@ -30,7 +32,7 @@ while(1):
     cur_timeVal = int(str(cur_hour)+str(cur_min))
 
 
-    sheet = client.open('Zoom-Korona').sheet1
+    sheet = client.open('Classes').sheet1
     rows = sheet.row_count
 
     print("cur_time ", cur_timeVal)
