@@ -1,4 +1,4 @@
-# zoomKorona
+# Zoom Korona - Never forget to join another Zoom meeting
 Script to join zoom calls automatically by pulling scheduling data from Google Sheets and Google calendar
 
 Instructions for Google Calendar Integration
