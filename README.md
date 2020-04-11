@@ -11,3 +11,5 @@ Instructions for Google Calendar Integration
 Instructions for Google Sheets Integration
 * Watch demo: https://youtu.be/qwrn6SzWkjk
 
+<i> Disclaimer: Application might have security flaws. Use at your own risk. </i>
+
