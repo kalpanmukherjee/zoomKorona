@@ -12,13 +12,14 @@ import re
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
+link_save = []
+sleep_time = 10
+
 
 def find_url(string): 
     # findall() has been used  
     # with valid conditions for urls in string
-    print("inside")
     url = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', string)
-    print("outside") 
     return url 
 
 def get_event(creds, service):
@@ -70,12 +71,16 @@ def get_event(creds, service):
         try:
             zoom_url = events[0]['description']
             zoom_url = find_url(zoom_url)
-            print(zoom_url)
+            print("Searching for URL: ",zoom_url)
             if(zoom_url==""):
                 print("No URL found in description")
                 return 0
-            webbrowser.open_new_tab(zoom_url[0])
-            return 1
+            if zoom_url not in link_save:
+                link_save.append(zoom_url)
+                webbrowser.open_new_tab(zoom_url[0])
+            else:
+                print("Meeting already launched, waiting for next meeting")
+            return 0
         except:
             print("URL does not exist")
             return 0
@@ -120,11 +125,11 @@ def main():
 
         while(get_event(creds, service)!=1):
             #HOW LONG TO SLEEP FOR IN SECONDS
-            time.sleep(300)
+            time.sleep(sleep_time)
 
     except:
         print("Please check your internet connection")
-        time.sleep(300)
+        time.sleep(sleep_time)
         main()    
 
 if __name__ == '__main__':
