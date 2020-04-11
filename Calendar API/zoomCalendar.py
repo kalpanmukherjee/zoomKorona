@@ -32,8 +32,6 @@ def get_event(creds, service):
     start = events[0]['start'].get('dateTime', events[0]['start'].get('date'))
     time = start[:16]
 
-    #print(time)
-
     #FOR FULL DAY EVENTS
     if(start[17:]==""):
         print("Next event is a full day event")
@@ -60,8 +58,8 @@ def get_event(creds, service):
 
     if(now_timeVal>rec_timeVal-5 and now_timeVal<rec_timeVal+5):
         print("Event time matches current time! LAUNCHING...")
-        #zoom_url = events[0]['description']
-        #webbrowser.open_new_tab(zoom_url)
+        zoom_url = events[0]['description']
+        webbrowser.open_new_tab(zoom_url)
         return 1
         #flag = 1
         #break   
@@ -105,11 +103,11 @@ def main():
 
         while(get_event(creds, service)!=1):
             #HOW LONG TO SLEEP FOR IN SECONDS
-            time.sleep(10)
+            time.sleep(300)
 
     except:
         print("Please check your internet connection")
-        time.sleep(10)
+        time.sleep(300)
         main()    
 
 if __name__ == '__main__':
