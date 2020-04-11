@@ -7,10 +7,19 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 import webbrowser
+import re
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
+
+def find_url(string): 
+    # findall() has been used  
+    # with valid conditions for urls in string
+    print("inside")
+    url = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', string)
+    print("outside") 
+    return url 
 
 def get_event(creds, service):
 
@@ -58,11 +67,19 @@ def get_event(creds, service):
 
     if(now_timeVal>rec_timeVal-5 and now_timeVal<rec_timeVal+5):
         print("Event time matches current time! LAUNCHING...")
-        zoom_url = events[0]['description']
-        webbrowser.open_new_tab(zoom_url)
-        return 1
-        #flag = 1
-        #break   
+        try:
+            zoom_url = events[0]['description']
+            zoom_url = find_url(zoom_url)
+            print(zoom_url)
+            if(zoom_url==""):
+                print("No URL found in description")
+                return 0
+            webbrowser.open_new_tab(zoom_url[0])
+            return 1
+        except:
+            print("URL does not exist")
+            return 0
+        
     
     print("NEXT EVENT: ", record_time, events[0]['summary'])
 
