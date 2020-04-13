@@ -13,7 +13,7 @@ import re
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
 link_save = []
-sleep_time = 10
+sleep_time = 180
 
 
 def find_url(string): 
@@ -53,9 +53,9 @@ def get_event(creds, service):
         print("Next event is not this month")
         return 0
 
-    if(nowist.day<record_time.day):
-        print("Next event is not today")
-        return 0
+    #if(nowist.day<record_time.day):
+     #   print("Next event is not today")
+      #  return 0
 
     print("Found Event happening today!")
 
@@ -63,8 +63,17 @@ def get_event(creds, service):
     rec_timeVal = int(str(record_time.hour)+str(record_time.minute))
     now_timeVal = int(str(nowist.hour)+str(nowist.minute))
 
+    #temp bug fix
+    #code this up later
+    if(rec_timeVal<=999):
+        rec_timeVal *= 10
+    if(now_timeVal<=999):
+        now_timeVal *= 10
+    
+    
     #print("rec_timeVal: ", rec_timeVal)
     print("Current Time:", now_timeVal)
+    print("Next Event Time:", rec_timeVal)
 
     if(now_timeVal>rec_timeVal-5 and now_timeVal<rec_timeVal+5):
         print("Event time matches current time! LAUNCHING...")
