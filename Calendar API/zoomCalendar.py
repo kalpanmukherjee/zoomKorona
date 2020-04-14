@@ -13,7 +13,7 @@ import re
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
 link_save = []
-sleep_time = 180
+sleep_time = 300
 
 
 def find_url(string): 
@@ -62,37 +62,30 @@ def get_event(creds, service):
 
     rec_timeVal = int(str(record_time.hour)+str(record_time.minute))
     now_timeVal = int(str(nowist.hour)+str(nowist.minute))
-
-    #temp bug fix
-    #code this up later
-    if(rec_timeVal<=999):
-        rec_timeVal *= 10
-    if(now_timeVal<=999):
-        now_timeVal *= 10
-    
-    
+     
     #print("rec_timeVal: ", rec_timeVal)
-    print("Current Time:", now_timeVal)
-    print("Next Event Time:", rec_timeVal)
+    print("Current Time:", nowist)
+    print("Next Event Time:", record_time)
 
-    if(now_timeVal>rec_timeVal-5 and now_timeVal<rec_timeVal+5):
-        print("Event time matches current time! LAUNCHING...")
-        try:
-            zoom_url = events[0]['description']
-            zoom_url = find_url(zoom_url)
-            print("Searching for URL: ",zoom_url)
-            if(zoom_url==""):
-                print("No URL found in description")
+    if(nowist.hour==record_time.hour):
+        if(nowist.minute>=record_time.minute-5 and nowist.minute<=record_time.minute+10):
+            print("Event time matches current time! LAUNCHING...")
+            try:
+                zoom_url = events[0]['description']
+                zoom_url = find_url(zoom_url)
+                print("Searching for URL: ",zoom_url)
+                if(zoom_url==""):
+                    print("No URL found in description")
+                    return 0
+                if zoom_url not in link_save:
+                    link_save.append(zoom_url)
+                    webbrowser.open_new_tab(zoom_url[0])
+                else:
+                    print("Meeting already launched, waiting for next meeting")
                 return 0
-            if zoom_url not in link_save:
-                link_save.append(zoom_url)
-                webbrowser.open_new_tab(zoom_url[0])
-            else:
-                print("Meeting already launched, waiting for next meeting")
-            return 0
-        except:
-            print("URL does not exist")
-            return 0
+            except:
+                print("URL does not exist")
+                return 0
         
     
     print("NEXT EVENT: ", record_time, events[0]['summary'])
